@@ -14,7 +14,22 @@ A Model Context Protocol (MCP) server for journal entries with a React Router v7
 
 ## Getting Started
 
-### Installation
+### Quick Start with npx
+
+Run directly without installation:
+
+```bash
+# Start web viewer
+npx journal-mcp --viewer
+
+# Setup Claude Desktop integration
+npx journal-mcp --setup
+
+# Start MCP server for Claude Desktop
+npx journal-mcp
+```
+
+### Local Development
 
 Install the dependencies:
 
@@ -42,43 +57,48 @@ pnpm build
 
 ## Usage
 
-### MCP Server Mode (Default)
-
-For integration with Claude Desktop:
+### Using npx (Recommended)
 
 ```bash
-# Setup Claude Desktop configuration
-node dist/index.js --setup
+# Show help
+npx journal-mcp --help
 
-# Start MCP server
-node dist/index.js
+# Setup Claude Desktop integration
+npx journal-mcp --setup
+
+# Verify Claude Desktop setup
+npx journal-mcp --verify-setup
+
+# Start MCP server for Claude Desktop
+npx journal-mcp
+
+# Start web viewer
+npx journal-mcp --viewer
+
+# Custom port examples
+npx journal-mcp --setup --port 3001
+npx journal-mcp --viewer --port 3001
 ```
 
-### Web Viewer Mode
+### Local Development Commands
 
-For browsing journal entries in a web interface:
-
-```bash
-node dist/index.js --viewer
-```
-
-The web viewer will be available at `http://localhost:3000` (or your specified port).
-
-### Available Commands
+For development after local installation:
 
 ```bash
 # Show help
 node dist/index.js --help
 
-# Verify Claude Desktop setup
-node dist/index.js --verify-setup
+# Setup Claude Desktop configuration
+node dist/index.js --setup
 
-# Setup with custom port
-node dist/index.js --setup --port 3001
+# Start MCP server
+node dist/index.js
 
-# Start web viewer on custom port
-node dist/index.js --viewer --port 3001
+# Start web viewer
+node dist/index.js --viewer
 ```
+
+The web viewer will be available at `http://localhost:3000` (or your specified port).
 
 ## MCP Tools
 
