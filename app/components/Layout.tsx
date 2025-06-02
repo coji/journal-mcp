@@ -1,17 +1,16 @@
-import { Link, useLocation } from "react-router";
-import { ReactNode } from "react";
+import { Link, useLocation } from 'react-router';
 
 interface LayoutProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
 export function Layout({ children }: LayoutProps) {
   const location = useLocation();
 
   const navigation = [
-    { name: "Home", href: "/", icon: "🏠" },
-    { name: "Search", href: "/search", icon: "🔍" },
-    { name: "Tags", href: "/tags", icon: "🏷️" },
+    { name: 'Home', href: '/', icon: '🏠' },
+    { name: 'Search', href: '/search', icon: '🔍' },
+    { name: 'Tags', href: '/tags', icon: '🏷️' },
   ];
 
   return (
@@ -24,20 +23,22 @@ export function Layout({ children }: LayoutProps) {
                 📖 Journal
               </Link>
             </div>
-            
+
             <div className="flex space-x-1">
               {navigation.map((item) => {
-                const isActive = location.pathname === item.href || 
-                  (item.href !== "/" && location.pathname.startsWith(item.href));
-                
+                const isActive =
+                  location.pathname === item.href ||
+                  (item.href !== '/' &&
+                    location.pathname.startsWith(item.href));
+
                 return (
                   <Link
                     key={item.name}
                     to={item.href}
                     className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                       isActive
-                        ? "bg-blue-100 text-blue-700"
-                        : "text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+                        ? 'bg-blue-100 text-blue-700'
+                        : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
                     }`}
                   >
                     <span className="mr-1">{item.icon}</span>

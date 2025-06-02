@@ -64,13 +64,13 @@ Examples:
   const port = parseInt(process.env.JOURNAL_PORT || args.port || '3000');
 
   console.log('🚀 Starting Journal MCP Server...');
-  
+
   // Start web server
   const webServer = await startWebServer(port);
 
   // Start MCP server
   const mcpServer = new JournalMCPServer();
-  
+
   // Handle graceful shutdown
   process.on('SIGINT', () => {
     console.log('\n🛑 Shutting down gracefully...');

@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link } from 'react-router';
 
 interface TagListProps {
   tags: Array<{ tag: string; count: number }>;
@@ -19,7 +19,7 @@ export function TagList({ tags }: TagListProps) {
       <h2 className="text-lg font-semibold text-gray-900 mb-4">
         Tags ({tags.length})
       </h2>
-      
+
       <div className="flex flex-wrap gap-2">
         {tags.map(({ tag, count }) => (
           <Link

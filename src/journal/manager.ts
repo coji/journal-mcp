@@ -1,25 +1,25 @@
 import matter from 'gray-matter';
 import glob from 'fast-glob';
-import type { 
-  JournalEntry, 
-  JournalFile, 
-  JournalSearchOptions, 
-  JournalSearchResult, 
+import type {
+  JournalEntry,
+  JournalFile,
+  JournalSearchOptions,
+  JournalSearchResult,
   JournalStats,
-  AddEntryOptions 
+  AddEntryOptions,
 } from './types.js';
-import { 
-  getEntriesDir, 
-  getDateFilePath, 
-  parseDateFromPath, 
-  getTodayDate 
+import {
+  getEntriesDir,
+  getDateFilePath,
+  parseDateFromPath,
+  getTodayDate,
 } from '../utils/paths.js';
-import { 
-  ensureDir, 
-  fileExists, 
-  readFileIfExists, 
-  writeFileWithDir, 
-  backupFile 
+import {
+  ensureDir,
+  fileExists,
+  readFileIfExists,
+  writeFileWithDir,
+  backupFile,
 } from '../utils/files.js';
 
 export class JournalManager {
@@ -29,13 +29,15 @@ export class JournalManager {
    * Add a new journal entry
    */
   async addEntry(options: AddEntryOptions): Promise<JournalEntry> {
-    const date = options.timestamp ? options.timestamp.split('T')[0] : getTodayDate();
+    const date = options.timestamp
+      ? options.timestamp.split('T')[0]
+      : getTodayDate();
     const timestamp = options.timestamp || new Date().toISOString();
     const filePath = getDateFilePath(date);
-    
+
     // Acquire file lock
     await this.acquireLock(filePath);
-    
+
     try {
       // Create entry
       const entry: JournalEntry = {
@@ -45,7 +47,7 @@ export class JournalManager {
         tags: options.tags || this.extractTags(options.content),
         created: timestamp,
         updated: timestamp,
-        timestamp: timestamp.split('T')[1].slice(0, 5) // HH:MM format
+        timestamp: timestamp.split('T')[1].slice(0, 5), // HH:MM format
       };
 
       // Read existing file or create new one
@@ -55,15 +57,15 @@ export class JournalManager {
       if (existingContent) {
         // Backup existing file
         await backupFile(filePath);
-        
+
         // Parse existing file
         journalFile = await this.parseJournalFile(filePath, existingContent);
-        
+
         // Add new entry
         journalFile.entries.push(entry);
         journalFile.updated = timestamp;
         journalFile.entries_count = journalFile.entries.length;
-        
+
         // Merge tags
         const allTags = new Set([...journalFile.tags, ...entry.tags]);
         journalFile.tags = Array.from(allTags).sort();
@@ -77,7 +79,7 @@ export class JournalManager {
           entries_count: 1,
           entries: [entry],
           filePath,
-          date
+          date,
         };
       }
 
@@ -94,7 +96,9 @@ export class JournalManager {
   /**
    * Search journal entries
    */
-  async searchEntries(options: JournalSearchOptions = {}): Promise<JournalSearchResult> {
+  async searchEntries(
+    options: JournalSearchOptions = {}
+  ): Promise<JournalSearchResult> {
     const entriesDir = getEntriesDir();
     await ensureDir(entriesDir);
 
@@ -121,7 +125,9 @@ export class JournalManager {
     journalFiles = this.filterJournalFiles(journalFiles, options);
 
     // Sort by date (newest first)
-    journalFiles.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    journalFiles.sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
 
     // Apply pagination
     const offset = options.offset || 0;
@@ -132,7 +138,7 @@ export class JournalManager {
     return {
       entries: paginatedFiles,
       total,
-      hasMore: offset + limit < total
+      hasMore: offset + limit < total,
     };
   }
 
@@ -150,7 +156,7 @@ export class JournalManager {
   async getEntryByDate(date: string): Promise<JournalFile | null> {
     const filePath = getDateFilePath(date);
     const content = await readFileIfExists(filePath);
-    
+
     if (!content) return null;
 
     try {
@@ -190,12 +196,15 @@ export class JournalManager {
         totalEntries: 0,
         totalFiles: 0,
         dateRange: { earliest: '', latest: '' },
-        topTags: []
+        topTags: [],
       };
     }
 
-    const totalEntries = files.reduce((sum, file) => sum + file.entries_count, 0);
-    const dates = files.map(f => f.date).sort();
+    const totalEntries = files.reduce(
+      (sum, file) => sum + file.entries_count,
+      0
+    );
+    const dates = files.map((f) => f.date).sort();
     const topTags = await this.listTags();
 
     return {
@@ -203,16 +212,19 @@ export class JournalManager {
       totalFiles: files.length,
       dateRange: {
         earliest: dates[0],
-        latest: dates[dates.length - 1]
+        latest: dates[dates.length - 1],
       },
-      topTags: topTags.slice(0, 10)
+      topTags: topTags.slice(0, 10),
     };
   }
 
   /**
    * Parse journal file content
    */
-  private async parseJournalFile(filePath: string, content: string): Promise<JournalFile> {
+  private async parseJournalFile(
+    filePath: string,
+    content: string
+  ): Promise<JournalFile> {
     const { data: frontmatter, content: body } = matter(content);
     const date = parseDateFromPath(filePath) || frontmatter.title || '';
 
@@ -227,14 +239,17 @@ export class JournalManager {
       entries_count: frontmatter.entries_count || entries.length,
       entries,
       filePath,
-      date
+      date,
     };
   }
 
   /**
    * Parse individual entries from markdown content
    */
-  private parseEntriesFromMarkdown(content: string, date: string): JournalEntry[] {
+  private parseEntriesFromMarkdown(
+    content: string,
+    date: string
+  ): JournalEntry[] {
     const entries: JournalEntry[] = [];
     const lines = content.split('\n');
     let currentEntry: Partial<JournalEntry> | null = null;
@@ -243,18 +258,18 @@ export class JournalManager {
     for (const line of lines) {
       // Check for time-based entry headers (e.g., "## 09:30 - Title")
       const timeMatch = line.match(/^## (\d{2}:\d{2})\s*-?\s*(.*)$/);
-      
+
       if (timeMatch) {
         // Save previous entry
         if (currentEntry) {
           currentEntry.content = contentLines.join('\n').trim();
           entries.push(currentEntry as JournalEntry);
         }
-        
+
         // Start new entry
         const [, time, title] = timeMatch;
         const timestamp = `${date}T${time}:00`;
-        
+
         currentEntry = {
           id: `${date}-${time.replace(':', '')}`,
           title: title.trim() || 'Entry',
@@ -262,16 +277,16 @@ export class JournalManager {
           created: timestamp,
           updated: timestamp,
           tags: [],
-          content: ''
+          content: '',
         };
         contentLines = [];
       } else if (currentEntry) {
         contentLines.push(line);
-        
+
         // Extract tags from content
         const tagMatches = line.match(/#(\w+)/g);
         if (tagMatches) {
-          const tags = tagMatches.map(tag => tag.slice(1));
+          const tags = tagMatches.map((tag) => tag.slice(1));
           currentEntry.tags = [...(currentEntry.tags || []), ...tags];
         }
       }
@@ -284,7 +299,7 @@ export class JournalManager {
     }
 
     // Remove duplicate tags and sort
-    entries.forEach(entry => {
+    entries.forEach((entry) => {
       entry.tags = Array.from(new Set(entry.tags)).sort();
     });
 
@@ -300,7 +315,7 @@ export class JournalManager {
       tags: file.tags,
       created: file.created,
       updated: file.updated,
-      entries_count: file.entries_count
+      entries_count: file.entries_count,
     };
 
     let content = `# ${file.title}\n\n`;
@@ -310,7 +325,9 @@ export class JournalManager {
       content += `${entry.content}\n\n`;
     }
 
-    content += `---\n*最終更新: ${new Date(file.updated).toLocaleString('ja-JP')} | エントリ数: ${file.entries_count}*\n`;
+    content += `---\n*最終更新: ${new Date(file.updated).toLocaleString(
+      'ja-JP'
+    )} | エントリ数: ${file.entries_count}*\n`;
 
     return matter.stringify(content, frontmatter);
   }
@@ -318,22 +335,29 @@ export class JournalManager {
   /**
    * Filter journal files based on search options
    */
-  private filterJournalFiles(files: JournalFile[], options: JournalSearchOptions): JournalFile[] {
-    return files.filter(file => {
+  private filterJournalFiles(
+    files: JournalFile[],
+    options: JournalSearchOptions
+  ): JournalFile[] {
+    return files.filter((file) => {
       // Date range filter
       if (options.dateFrom && file.date < options.dateFrom) return false;
       if (options.dateTo && file.date > options.dateTo) return false;
 
       // Tags filter
       if (options.tags && options.tags.length > 0) {
-        const hasRequiredTags = options.tags.every(tag => file.tags.includes(tag));
+        const hasRequiredTags = options.tags.every((tag) =>
+          file.tags.includes(tag)
+        );
         if (!hasRequiredTags) return false;
       }
 
       // Keywords filter
       if (options.keywords) {
         const keyword = options.keywords.toLowerCase();
-        const searchText = `${file.title} ${file.entries.map(e => e.content).join(' ')}`.toLowerCase();
+        const searchText = `${file.title} ${file.entries
+          .map((e) => e.content)
+          .join(' ')}`.toLowerCase();
         if (!searchText.includes(keyword)) return false;
       }
 
@@ -347,10 +371,10 @@ export class JournalManager {
   private extractTitle(content: string): string {
     const lines = content.split('\n');
     const firstLine = lines[0].trim();
-    
+
     // Remove markdown formatting
     const title = firstLine.replace(/^#+\s*/, '').replace(/[*_`]/g, '');
-    
+
     return title.slice(0, 50) || 'Entry';
   }
 
@@ -359,7 +383,7 @@ export class JournalManager {
    */
   private extractTags(content: string): string[] {
     const tagMatches = content.match(/#(\w+)/g) || [];
-    const tags = tagMatches.map(tag => tag.slice(1));
+    const tags = tagMatches.map((tag) => tag.slice(1));
     return Array.from(new Set(tags)).sort();
   }
 
@@ -373,12 +397,12 @@ export class JournalManager {
     }
 
     let resolveLock: () => void;
-    const lockPromise = new Promise<void>(resolve => {
+    const lockPromise = new Promise<void>((resolve) => {
       resolveLock = resolve;
     });
 
     this.lockMap.set(filePath, lockPromise);
-    
+
     // Auto-release lock after 30 seconds
     setTimeout(() => {
       resolveLock();

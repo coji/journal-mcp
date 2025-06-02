@@ -21,7 +21,7 @@
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^0.5.0",
+    "@modelcontextprotocol/sdk": "^1.12.1",
     "@react-router/node": "^7.5.3",
     "@react-router/serve": "^7.5.3",
     "fast-glob": "^3.3.2",
@@ -34,7 +34,7 @@
   "devDependencies": {
     "@react-router/dev": "^7.5.3",
     "@tailwindcss/vite": "^4.1.4",
-    "@types/node": "^20",
+    "@types/node": "^22.15.29",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
     "tailwindcss": "^4.1.4",
@@ -45,6 +45,11 @@
   "engines": {
     "node": ">=18"
   },
-  "keywords": ["mcp", "journal", "claude-code", "markdown"],
+  "keywords": [
+    "mcp",
+    "journal",
+    "claude-code",
+    "markdown"
+  ],
   "license": "MIT"
 }

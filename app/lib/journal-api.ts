@@ -43,12 +43,14 @@ export class JournalAPI {
     return [];
   }
 
-  static async searchEntries(options: JournalSearchOptions = {}): Promise<JournalSearchResult> {
+  static async searchEntries(
+    options: JournalSearchOptions = {}
+  ): Promise<JournalSearchResult> {
     // TODO: Connect to actual journal manager
     return {
       entries: [],
       total: 0,
-      hasMore: false
+      hasMore: false,
     };
   }
 
@@ -68,7 +70,7 @@ export class JournalAPI {
       totalEntries: 0,
       totalFiles: 0,
       dateRange: { earliest: '', latest: '' },
-      topTags: []
+      topTags: [],
     };
   }
 }

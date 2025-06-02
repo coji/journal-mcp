@@ -1,5 +1,5 @@
-import { Link } from "react-router";
-import type { JournalFile, JournalEntry } from "../lib/journal-api";
+import { Link } from 'react-router';
+import type { JournalFile, JournalEntry } from '../lib/journal-api';
 
 interface EntryCardProps {
   file: JournalFile;
@@ -14,16 +14,20 @@ function SingleEntry({ entry, date }: SingleEntryProps) {
   return (
     <div className="border-l-2 border-gray-200 pl-4 ml-2 pb-4">
       <div className="flex items-center gap-2 mb-2">
-        <span className="text-sm font-mono text-gray-600">{entry.timestamp}</span>
+        <span className="text-sm font-mono text-gray-600">
+          {entry.timestamp}
+        </span>
         <h4 className="font-medium text-gray-900">{entry.title}</h4>
       </div>
-      
+
       <div className="prose prose-sm max-w-none text-gray-700 mb-3">
         {entry.content.split('\n').map((line, idx) => (
-          <p key={idx} className="mb-1">{line}</p>
+          <p key={idx} className="mb-1">
+            {line}
+          </p>
         ))}
       </div>
-      
+
       {entry.tags.length > 0 && (
         <div className="flex flex-wrap gap-1">
           {entry.tags.map((tag) => (
@@ -45,7 +49,7 @@ export function EntryCard({ file }: EntryCardProps) {
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
       <div className="flex items-center justify-between mb-4">
-        <Link 
+        <Link
           to={`/entries/${file.date}`}
           className="text-lg font-semibold text-gray-900 hover:text-blue-600 transition-colors"
         >

@@ -10,7 +10,7 @@ const execAsync = promisify(exec);
 export async function detectNpxPath(): Promise<string> {
   const isWindows = platform() === 'win32';
   const command = isWindows ? 'where npx' : 'which npx';
-  
+
   try {
     const { stdout } = await execAsync(command);
     return stdout.trim().split('\n')[0];
@@ -24,7 +24,7 @@ export async function detectNpxPath(): Promise<string> {
  */
 export function getClaudeConfigPath(): string {
   const isWindows = platform() === 'win32';
-  
+
   if (isWindows) {
     return `${process.env.APPDATA}\\Claude\\claude_desktop_config.json`;
   } else {

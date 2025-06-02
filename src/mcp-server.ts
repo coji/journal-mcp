@@ -37,7 +37,8 @@ export class JournalMCPServer {
         tools: [
           {
             name: 'add_entry',
-            description: 'Add a new journal entry. If an entry for today already exists, it will append to the same file.',
+            description:
+              'Add a new journal entry. If an entry for today already exists, it will append to the same file.',
             inputSchema: {
               type: 'object',
               properties: {
@@ -48,11 +49,13 @@ export class JournalMCPServer {
                 tags: {
                   type: 'array',
                   items: { type: 'string' },
-                  description: 'Optional tags for the entry (will also extract from content)',
+                  description:
+                    'Optional tags for the entry (will also extract from content)',
                 },
                 timestamp: {
                   type: 'string',
-                  description: 'Optional ISO timestamp (defaults to current time)',
+                  description:
+                    'Optional ISO timestamp (defaults to current time)',
                 },
               },
               required: ['content'],
@@ -60,7 +63,8 @@ export class JournalMCPServer {
           },
           {
             name: 'search_entries',
-            description: 'Search journal entries by date range, tags, or keywords',
+            description:
+              'Search journal entries by date range, tags, or keywords',
             inputSchema: {
               type: 'object',
               properties: {
@@ -101,7 +105,8 @@ export class JournalMCPServer {
               properties: {
                 limit: {
                   type: 'number',
-                  description: 'Number of recent entries to retrieve (default 10)',
+                  description:
+                    'Number of recent entries to retrieve (default 10)',
                 },
               },
               required: [],
@@ -109,7 +114,8 @@ export class JournalMCPServer {
           },
           {
             name: 'list_tags',
-            description: 'List all tags used in journal entries with their usage counts',
+            description:
+              'List all tags used in journal entries with their usage counts',
             inputSchema: {
               type: 'object',
               properties: {},
@@ -162,7 +168,13 @@ export class JournalMCPServer {
               content: [
                 {
                   type: 'text',
-                  text: `✅ Journal entry added successfully!\n\n**Entry Details:**\n- ID: ${entry.id}\n- Title: ${entry.title}\n- Tags: ${entry.tags.join(', ') || 'None'}\n- Time: ${entry.timestamp}\n\n**Content:**\n${entry.content}`,
+                  text: `✅ Journal entry added successfully!\n\n**Entry Details:**\n- ID: ${
+                    entry.id
+                  }\n- Title: ${entry.title}\n- Tags: ${
+                    entry.tags.join(', ') || 'None'
+                  }\n- Time: ${entry.timestamp}\n\n**Content:**\n${
+                    entry.content
+                  }`,
                 },
               ],
             };
@@ -178,7 +190,9 @@ export class JournalMCPServer {
               offset: args?.offset as number | undefined,
             };
 
-            const result = await this.journalManager.searchEntries(searchOptions);
+            const result = await this.journalManager.searchEntries(
+              searchOptions
+            );
 
             let response = `📖 Found ${result.total} journal entries`;
             if (result.hasMore) {
@@ -189,10 +203,12 @@ export class JournalMCPServer {
             for (const file of result.entries) {
               response += `**${file.date}** - ${file.entries_count} entries\n`;
               response += `Tags: ${file.tags.join(', ') || 'None'}\n`;
-              
+
               for (const entry of file.entries) {
                 response += `\n📝 ${entry.timestamp} - ${entry.title}\n`;
-                response += `${entry.content.slice(0, 200)}${entry.content.length > 200 ? '...' : ''}\n`;
+                response += `${entry.content.slice(0, 200)}${
+                  entry.content.length > 200 ? '...' : ''
+                }\n`;
               }
               response += '\n---\n\n';
             }
@@ -216,7 +232,7 @@ export class JournalMCPServer {
             for (const file of entries) {
               response += `**${file.date}** - ${file.entries_count} entries\n`;
               response += `Tags: ${file.tags.join(', ') || 'None'}\n`;
-              
+
               for (const entry of file.entries) {
                 response += `\n📝 ${entry.timestamp} - ${entry.title}\n`;
                 response += `${entry.content}\n`;
@@ -275,8 +291,12 @@ export class JournalMCPServer {
             let response = `📅 Journal Entry for ${entry.date}\n\n`;
             response += `**Tags:** ${entry.tags.join(', ') || 'None'}\n`;
             response += `**Entries:** ${entry.entries_count}\n`;
-            response += `**Created:** ${new Date(entry.created).toLocaleString()}\n`;
-            response += `**Updated:** ${new Date(entry.updated).toLocaleString()}\n\n`;
+            response += `**Created:** ${new Date(
+              entry.created
+            ).toLocaleString()}\n`;
+            response += `**Updated:** ${new Date(
+              entry.updated
+            ).toLocaleString()}\n\n`;
 
             for (const entryItem of entry.entries) {
               response += `## ${entryItem.timestamp} - ${entryItem.title}\n`;
@@ -299,11 +319,11 @@ export class JournalMCPServer {
             let response = `📊 Journal Summary\n\n`;
             response += `**Total Entries:** ${stats.totalEntries}\n`;
             response += `**Total Days:** ${stats.totalFiles}\n`;
-            
+
             if (stats.dateRange.earliest && stats.dateRange.latest) {
               response += `**Date Range:** ${stats.dateRange.earliest} to ${stats.dateRange.latest}\n`;
             }
-            
+
             response += `\n**Top Tags:**\n`;
             if (stats.topTags.length === 0) {
               response += 'No tags found.\n';
@@ -330,7 +350,8 @@ export class JournalMCPServer {
             );
         }
       } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : String(error);
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
         throw new McpError(
           ErrorCode.InternalError,
           `Error executing tool ${name}: ${errorMessage}`
@@ -342,7 +363,7 @@ export class JournalMCPServer {
   async start() {
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
-    
+
     console.error('📖 Journal MCP Server started');
   }
 }

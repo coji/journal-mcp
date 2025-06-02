@@ -1,20 +1,25 @@
-import { Form, useSearchParams } from "react-router";
-import { useState } from "react";
+import { Form, useSearchParams } from 'react-router';
+import { useState } from 'react';
 
 export function SearchForm() {
   const [searchParams] = useSearchParams();
-  const [keywords, setKeywords] = useState(searchParams.get("keywords") || "");
-  const [tags, setTags] = useState(searchParams.get("tags") || "");
-  const [dateFrom, setDateFrom] = useState(searchParams.get("dateFrom") || "");
-  const [dateTo, setDateTo] = useState(searchParams.get("dateTo") || "");
+  const [keywords, setKeywords] = useState(searchParams.get('keywords') || '');
+  const [tags, setTags] = useState(searchParams.get('tags') || '');
+  const [dateFrom, setDateFrom] = useState(searchParams.get('dateFrom') || '');
+  const [dateTo, setDateTo] = useState(searchParams.get('dateTo') || '');
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-      <h2 className="text-lg font-semibold text-gray-900 mb-4">Search Journal Entries</h2>
-      
+      <h2 className="text-lg font-semibold text-gray-900 mb-4">
+        Search Journal Entries
+      </h2>
+
       <Form method="get" className="space-y-4">
         <div>
-          <label htmlFor="keywords" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="keywords"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Keywords
           </label>
           <input
@@ -29,7 +34,10 @@ export function SearchForm() {
         </div>
 
         <div>
-          <label htmlFor="tags" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="tags"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Tags
           </label>
           <input
@@ -46,7 +54,10 @@ export function SearchForm() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="dateFrom" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="dateFrom"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               From Date
             </label>
             <input
@@ -60,7 +71,10 @@ export function SearchForm() {
           </div>
 
           <div>
-            <label htmlFor="dateTo" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="dateTo"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               To Date
             </label>
             <input
@@ -81,14 +95,14 @@ export function SearchForm() {
           >
             Search
           </button>
-          
+
           <button
             type="button"
             onClick={() => {
-              setKeywords("");
-              setTags("");
-              setDateFrom("");
-              setDateTo("");
+              setKeywords('');
+              setTags('');
+              setDateFrom('');
+              setDateTo('');
             }}
             className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
           >

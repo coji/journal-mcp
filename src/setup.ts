@@ -9,7 +9,9 @@ export interface SetupOptions {
   force?: boolean;
 }
 
-export async function setupClaudeDesktop(options: SetupOptions = {}): Promise<void> {
+export async function setupClaudeDesktop(
+  options: SetupOptions = {}
+): Promise<void> {
   const configPath = options.configPath || getClaudeConfigPath();
   const port = options.port || 3000;
 
@@ -25,10 +27,10 @@ export async function setupClaudeDesktop(options: SetupOptions = {}): Promise<vo
 
   // Read existing config or create empty one
   let config: any = {};
-  
+
   if (await fileExists(configPath)) {
     console.log('📖 Reading existing configuration...');
-    
+
     // Create backup
     const backupPath = `${configPath}.backup.${Date.now()}`;
     const existingContent = await fs.readFile(configPath, 'utf-8');
@@ -60,8 +62,8 @@ export async function setupClaudeDesktop(options: SetupOptions = {}): Promise<vo
     command: npxPath,
     args: ['@coji/journal-mcp'],
     env: {
-      JOURNAL_PORT: port.toString()
-    }
+      JOURNAL_PORT: port.toString(),
+    },
   };
 
   // Write updated config
@@ -71,17 +73,19 @@ export async function setupClaudeDesktop(options: SetupOptions = {}): Promise<vo
   console.log('✅ Claude Desktop configuration updated!');
   console.log('\n📋 Configuration added:');
   console.log(JSON.stringify(config.mcpServers.journal, null, 2));
-  
+
   console.log('\n🚀 Next steps:');
   console.log('1. Restart Claude Desktop');
   console.log('2. The journal MCP server will be available in Claude Desktop');
   console.log(`3. Web viewer will be available at http://localhost:${port}`);
-  console.log('\n💡 Try asking Claude: "Add a journal entry about today\'s work"');
+  console.log(
+    '\n💡 Try asking Claude: "Add a journal entry about today\'s work"'
+  );
 }
 
 export async function verifySetup(): Promise<boolean> {
   const configPath = getClaudeConfigPath();
-  
+
   if (!(await fileExists(configPath))) {
     console.log('❌ Claude Desktop config not found');
     return false;
@@ -90,7 +94,7 @@ export async function verifySetup(): Promise<boolean> {
   try {
     const content = await fs.readFile(configPath, 'utf-8');
     const config = JSON.parse(content);
-    
+
     if (config.mcpServers?.journal) {
       console.log('✅ Journal MCP server is configured');
       return true;

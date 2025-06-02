@@ -9,7 +9,7 @@ export function getJournalDataDir(): string {
   if (xdgDataHome) {
     return join(xdgDataHome, 'journal-mcp');
   }
-  
+
   // Default to ~/.local/share/journal-mcp
   return join(homedir(), '.local', 'share', 'journal-mcp');
 }
@@ -29,7 +29,7 @@ export function getDateFilePath(date: string): string {
   const year = dateObj.getFullYear().toString();
   const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
   const filename = `${date}.md`;
-  
+
   return join(getEntriesDir(), year, month, filename);
 }
 
