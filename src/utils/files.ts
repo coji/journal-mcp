@@ -64,3 +64,17 @@ export async function backupFile(filePath: string): Promise<string | null> {
 
   return backupPath;
 }
+
+/**
+ * Delete a file if it exists
+ */
+export async function deleteFile(filePath: string): Promise<void> {
+  try {
+    await fs.unlink(filePath);
+  } catch (error) {
+    // Ignore file not found errors
+    if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
+      throw error;
+    }
+  }
+}

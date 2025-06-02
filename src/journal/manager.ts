@@ -20,6 +20,7 @@ import {
   readFileIfExists,
   writeFileWithDir,
   backupFile,
+  deleteFile,
 } from '../utils/files.js';
 
 // Global lock map for file operations
@@ -240,6 +241,8 @@ export async function addEntry(options: AddEntryOptions): Promise<JournalEntry> 
   // Acquire file lock
   await acquireLock(filePath);
 
+  let backupPath: string | null = null;
+
   try {
     // Create entry
     const entry: JournalEntry = {
@@ -258,7 +261,7 @@ export async function addEntry(options: AddEntryOptions): Promise<JournalEntry> 
 
     if (existingContent) {
       // Backup existing file
-      await backupFile(filePath);
+      backupPath = await backupFile(filePath);
 
       // Parse existing file
       journalFile = await parseJournalFile(filePath, existingContent);
@@ -289,7 +292,19 @@ export async function addEntry(options: AddEntryOptions): Promise<JournalEntry> 
     const content = formatJournalFile(journalFile);
     await writeFileWithDir(filePath, content);
 
+    // Clean up backup file after successful write
+    if (backupPath) {
+      await deleteFile(backupPath);
+    }
+
     return entry;
+  } catch (error) {
+    // If write failed and we have a backup, we can keep it for recovery
+    // Log the backup path for manual recovery if needed
+    if (backupPath) {
+      console.error(`Write failed, backup file preserved at: ${backupPath}`);
+    }
+    throw error;
   } finally {
     releaseLock(filePath);
   }
