@@ -10,16 +10,16 @@ A React Router v7 web application that will serve as the web viewer component fo
 
 ```bash
 # Development server with HMR
-npm run dev
+pnpm dev
 
 # TypeScript checking
-npm run typecheck
+pnpm typecheck
 
 # Production build
-npm run build
+pnpm build
 
 # Production server
-npm run start
+pnpm start
 ```
 
 ## Current Architecture
@@ -33,7 +33,7 @@ This is a React Router v7 application with:
 
 ### Project Structure
 
-```
+```text
 journal-mcp/
 ├── app/
 │   ├── root.tsx              # React Router root component
@@ -49,18 +49,50 @@ journal-mcp/
 
 ## Development Notes
 
-- Uses React Router v7's file-based routing system
-- Routes are defined in `app/routes.ts` and implemented in `app/routes/`
-- Components use TailwindCSS for styling
-- TypeScript is configured for strict type checking
+- **MCP Server**: Implemented in `src/` directory with TypeScript
+- **Web UI**: React Router v7 application in `app/` directory
+- **Build Process**: `npm run build` builds both MCP server and web components
+- **Testing**: Use `node dist/index.js --help` to test CLI functionality
 
-## Planned MCP Integration
+## MCP Server Implementation
 
-This web application is intended to be the web viewer component of a larger MCP server system that will:
+### Core Components
 
-- Provide journal entry management via MCP protocol
-- Store entries as Markdown files with frontmatter
-- Support search and filtering capabilities
-- Integrate with Claude Desktop via MCP configuration
+- **`src/journal/manager.ts`**: Journal file operations with file locking and backup
+- **`src/mcp-server.ts`**: MCP protocol implementation with 6 tools
+- **`src/setup.ts`**: Claude Desktop configuration automation
+- **`src/index.ts`**: CLI entry point supporting various options
 
-The web viewer should display journal entries, provide search functionality, and offer a clean interface for viewing chronological journal data.
+### Available MCP Tools
+
+1. `add_entry` - Add journal entries (appends to daily files)
+2. `search_entries` - Search by date range, tags, or keywords  
+3. `get_recent_entries` - Get most recent entries
+4. `list_tags` - List all tags with usage counts
+5. `get_entry_by_date` - Get specific date entries
+6. `get_daily_summary` - Get journal statistics
+
+### File Storage Format
+
+- **Location**: `~/.local/share/journal-mcp/entries/YYYY/MM/YYYY-MM-DD.md`
+- **Format**: Markdown with YAML frontmatter
+- **Features**: Tag extraction, time-based entries, automatic metadata
+
+### Setup & Usage
+
+```bash
+# Build the project
+pnpm build
+
+# Setup Claude Desktop integration  
+node dist/index.js --setup
+
+# Start MCP server (for Claude Desktop)
+node dist/index.js
+
+# Test CLI functionality
+node dist/index.js --help
+node dist/index.js --verify-setup
+```
+
+The web viewer provides a basic interface showing the server is running, with plans for a full React-based journal browser.

@@ -1,16 +1,31 @@
 {
-  "name": "journal-mcp",
-  "private": true,
+  "name": "@coji/journal-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for journal entries with web viewer",
   "type": "module",
+  "bin": {
+    "journal-mcp": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "build"
+  ],
   "scripts": {
-    "build": "react-router build",
+    "build": "pnpm run build:server && pnpm run build:web",
+    "build:server": "tsc -p tsconfig.server.json",
+    "build:web": "react-router build",
     "dev": "react-router dev",
+    "dev:server": "tsc -p tsconfig.server.json --watch",
     "start": "react-router-serve ./build/server/index.js",
-    "typecheck": "react-router typegen && tsc"
+    "typecheck": "react-router typegen && tsc",
+    "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.5.0",
     "@react-router/node": "^7.5.3",
     "@react-router/serve": "^7.5.3",
+    "fast-glob": "^3.3.2",
+    "gray-matter": "^4.0.3",
     "isbot": "^5.1.27",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
@@ -26,5 +41,10 @@
     "typescript": "^5.8.3",
     "vite": "^6.3.3",
     "vite-tsconfig-paths": "^5.1.4"
-  }
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": ["mcp", "journal", "claude-code", "markdown"],
+  "license": "MIT"
 }
