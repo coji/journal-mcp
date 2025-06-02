@@ -63,7 +63,7 @@ Examples:
   // Get port from environment or argument
   const port = parseInt(process.env.JOURNAL_PORT || args.port || '3000');
 
-  console.log('🚀 Starting Journal MCP Server...');
+  console.error('🚀 Starting Journal MCP Server...');
 
   // Start web server
   const webServer = await startWebServer(port);
