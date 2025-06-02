@@ -6,12 +6,18 @@ import {
   ListToolsRequestSchema,
   McpError,
 } from '@modelcontextprotocol/sdk/types.js';
-import { JournalManager } from './journal/manager.js';
+import {
+  addEntry,
+  searchEntries,
+  getRecentEntries,
+  listTags,
+  getEntryByDate,
+  getStats,
+} from './journal/manager.js';
 import type { AddEntryOptions } from './journal/types.js';
 
 export class JournalMCPServer {
   private server: Server;
-  private journalManager: JournalManager;
 
   constructor() {
     this.server = new Server(
@@ -26,7 +32,6 @@ export class JournalMCPServer {
       }
     );
 
-    this.journalManager = new JournalManager();
     this.setupToolHandlers();
   }
 
@@ -162,7 +167,7 @@ export class JournalMCPServer {
               timestamp: args?.timestamp as string | undefined,
             };
 
-            const entry = await this.journalManager.addEntry(options);
+            const entry = await addEntry(options);
 
             return {
               content: [
@@ -190,9 +195,7 @@ export class JournalMCPServer {
               offset: args?.offset as number | undefined,
             };
 
-            const result = await this.journalManager.searchEntries(
-              searchOptions
-            );
+            const result = await searchEntries(searchOptions);
 
             let response = `📖 Found ${result.total} journal entries`;
             if (result.hasMore) {
@@ -225,7 +228,7 @@ export class JournalMCPServer {
 
           case 'get_recent_entries': {
             const limit = args?.limit as number | undefined;
-            const entries = await this.journalManager.getRecentEntries(limit);
+            const entries = await getRecentEntries(limit);
 
             let response = `📅 Recent Journal Entries (${entries.length})\n\n`;
 
@@ -251,7 +254,7 @@ export class JournalMCPServer {
           }
 
           case 'list_tags': {
-            const tags = await this.journalManager.listTags();
+            const tags = await listTags();
 
             let response = `🏷️ Journal Tags (${tags.length})\n\n`;
 
@@ -275,7 +278,7 @@ export class JournalMCPServer {
 
           case 'get_entry_by_date': {
             const date = args?.date as string;
-            const entry = await this.journalManager.getEntryByDate(date);
+            const entry = await getEntryByDate(date);
 
             if (!entry) {
               return {
@@ -314,7 +317,7 @@ export class JournalMCPServer {
           }
 
           case 'get_daily_summary': {
-            const stats = await this.journalManager.getStats();
+            const stats = await getStats();
 
             let response = `📊 Journal Summary\n\n`;
             response += `**Total Entries:** ${stats.totalEntries}\n`;

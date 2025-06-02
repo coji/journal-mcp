@@ -1,4 +1,10 @@
-import { JournalManager } from 'src/journal/manager';
+import {
+  getRecentEntries as getRecentEntriesFromManager,
+  searchEntries as searchEntriesFromManager,
+  getEntryByDate as getEntryByDateFromManager,
+  listTags as listTagsFromManager,
+  getStats as getStatsFromManager,
+} from 'src/journal/manager';
 
 // Journal API client for the web interface
 export interface JournalEntry {
@@ -41,8 +47,7 @@ export interface JournalSearchResult {
 // For now, we'll create mock data for the web interface
 export const getRecentEntries = async (limit = 10): Promise<JournalFile[]> => {
   // TODO: Connect to actual journal manager
-  const manager = new JournalManager();
-  const entries = await manager.getRecentEntries(limit);
+  const entries = await getRecentEntriesFromManager(limit);
   return entries.map((entry) => ({
     title: entry.title,
     tags: entry.tags,
@@ -58,9 +63,8 @@ export const getRecentEntries = async (limit = 10): Promise<JournalFile[]> => {
 export const searchEntries = async (
   options: JournalSearchOptions = {}
 ): Promise<JournalSearchResult> => {
-  const manager = new JournalManager();
   const { dateFrom, dateTo, tags, keywords, limit = 10, offset = 0 } = options;
-  const searchResults = await manager.searchEntries({
+  const searchResults = await searchEntriesFromManager({
     dateFrom,
     dateTo,
     tags,
@@ -88,8 +92,7 @@ export const searchEntries = async (
 export const getEntryByDate = async (
   date: string
 ): Promise<JournalFile | null> => {
-  const manager = new JournalManager();
-  const entry = await manager.getEntryByDate(date);
+  const entry = await getEntryByDateFromManager(date);
 
   if (entry) {
     return {
@@ -109,8 +112,7 @@ export const getEntryByDate = async (
 export const listTags = async (): Promise<
   Array<{ tag: string; count: number }>
 > => {
-  const manager = new JournalManager();
-  const tags = await manager.listTags();
+  const tags = await listTagsFromManager();
   return tags.map((tag) => ({
     tag: tag.tag,
     count: tag.count,
@@ -118,8 +120,7 @@ export const listTags = async (): Promise<
 };
 
 export const getStats = async () => {
-  const manager = new JournalManager();
-  const stats = await manager.getStats();
+  const stats = await getStatsFromManager();
   if (stats) {
     return {
       totalEntries: stats.totalEntries,
