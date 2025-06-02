@@ -87,12 +87,17 @@ pnpm build
 # Setup Claude Desktop integration  
 node dist/index.js --setup
 
-# Start MCP server (for Claude Desktop)
+# Start MCP server (default mode for Claude Desktop)
 node dist/index.js
+
+# Start web viewer for browsing journal entries
+node dist/index.js --viewer
 
 # Test CLI functionality
 node dist/index.js --help
 node dist/index.js --verify-setup
 ```
 
-The web viewer provides a basic interface showing the server is running, with plans for a full React-based journal browser.
+The application now supports two modes:
+- **MCP Server mode** (default): For integration with Claude Desktop
+- **Web Viewer mode** (`--viewer`): React-based journal browser interface

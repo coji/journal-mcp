@@ -1,18 +1,16 @@
-# Welcome to React Router!
+# Journal MCP Server
 
-A modern, production-ready template for building full-stack React applications using React Router.
-
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+A Model Context Protocol (MCP) server for journal entries with a React Router v7 web viewer.
 
 ## Features
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+- 📖 **MCP Server**: Integration with Claude Desktop for journal management
+- 🌐 **Web Viewer**: React-based interface for browsing journal entries
+- 🚀 **Server-side rendering** with React Router
+- ⚡️ **Hot Module Replacement** (HMR) for development
+- 🔒 **TypeScript** by default
+- 🎉 **TailwindCSS** for styling
+- 📁 **File-based storage** with automatic organization
 
 ## Getting Started
 
@@ -21,7 +19,7 @@ A modern, production-ready template for building full-stack React applications u
 Install the dependencies:
 
 ```bash
-npm install
+pnpm install
 ```
 
 ### Development
@@ -29,59 +27,98 @@ npm install
 Start the development server with HMR:
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
-Your application will be available at `http://localhost:5173`.
+Your web viewer will be available at `http://localhost:5173`.
 
-## Building for Production
+### Building for Production
 
 Create a production build:
 
 ```bash
-npm run build
+pnpm build
 ```
+
+## Usage
+
+### MCP Server Mode (Default)
+
+For integration with Claude Desktop:
+
+```bash
+# Setup Claude Desktop configuration
+node dist/index.js --setup
+
+# Start MCP server
+node dist/index.js
+```
+
+### Web Viewer Mode
+
+For browsing journal entries in a web interface:
+
+```bash
+node dist/index.js --viewer
+```
+
+The web viewer will be available at `http://localhost:3000` (or your specified port).
+
+### Available Commands
+
+```bash
+# Show help
+node dist/index.js --help
+
+# Verify Claude Desktop setup
+node dist/index.js --verify-setup
+
+# Setup with custom port
+node dist/index.js --setup --port 3001
+
+# Start web viewer on custom port
+node dist/index.js --viewer --port 3001
+```
+
+## MCP Tools
+
+The server provides these tools for Claude Desktop:
+
+1. **add_entry** - Add new journal entries
+2. **search_entries** - Search by date range, tags, or keywords
+3. **get_recent_entries** - Get most recent entries
+4. **list_tags** - List all tags with usage counts
+5. **get_entry_by_date** - Get entries for a specific date
+6. **get_daily_summary** - Get journal statistics
+
+## File Storage
+
+Journal entries are stored in:
+- **Location**: `~/.local/share/journal-mcp/entries/YYYY/MM/YYYY-MM-DD.md`
+- **Format**: Markdown with YAML frontmatter
+- **Features**: Automatic tag extraction, time-based organization
 
 ## Deployment
 
 ### Docker Deployment
 
-To build and run using Docker:
-
 ```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
+docker build -t journal-mcp .
+docker run -p 3000:3000 journal-mcp
 ```
 
-The containerized application can be deployed to any platform that supports Docker, including:
+### Manual Deployment
 
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
+Deploy the output of `pnpm build`:
 
 ```
 ├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
+├── pnpm-lock.yaml
 ├── build/
 │   ├── client/    # Static assets
 │   └── server/    # Server-side code
 ```
 
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
-
 ---
 
-Built with ❤️ using React Router.
+Built with ❤️ using React Router and MCP.
