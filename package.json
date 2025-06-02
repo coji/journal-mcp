@@ -1,6 +1,6 @@
 {
   "name": "@coji/journal-mcp",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "MCP server for journal entries with web viewer",
   "publishConfig": {
     "access": "public"
@@ -24,7 +24,7 @@
   ],
   "scripts": {
     "build": "pnpm run build:server && pnpm run build:web",
-    "build:server": "tsc -p tsconfig.server.json",
+    "build:server": "tsc -p tsconfig.server.json && chmod +x dist/index.js",
     "build:web": "react-router build",
     "dev": "react-router dev",
     "dev:server": "tsc -p tsconfig.server.json --watch",
