@@ -16,31 +16,36 @@
     "build:web": "react-router build",
     "dev": "react-router dev",
     "dev:server": "tsc -p tsconfig.server.json --watch",
-    "start": "react-router-serve ./build/server/index.js",
+    "start": "node dist/index.js --viewer",
     "typecheck": "react-router typegen && tsc",
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.12.1",
-    "@react-router/node": "^7.5.3",
-    "@react-router/serve": "^7.5.3",
-    "fast-glob": "^3.3.2",
-    "gray-matter": "^4.0.3",
-    "isbot": "^5.1.27",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "react-router": "^7.5.3"
+    "@modelcontextprotocol/sdk": "1.12.1",
+    "@react-router/express": "7.6.1",
+    "@react-router/node": "7.6.1",
+    "compression": "1.8.0",
+    "express": "5.1.0",
+    "fast-glob": "^3.3.3",
+    "gray-matter": "4.0.3",
+    "isbot": "5.1.28",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-router": "7.6.1"
   },
   "devDependencies": {
-    "@react-router/dev": "^7.5.3",
-    "@tailwindcss/vite": "^4.1.4",
-    "@types/node": "^22.15.29",
-    "@types/react": "^19.1.2",
-    "@types/react-dom": "^19.1.2",
-    "tailwindcss": "^4.1.4",
-    "typescript": "^5.8.3",
-    "vite": "^6.3.3",
-    "vite-tsconfig-paths": "^5.1.4"
+    "@react-router/dev": "7.6.1",
+    "@tailwindcss/vite": "4.1.8",
+    "@types/compression": "1.8.0",
+    "@types/express": "5.0.2",
+    "@types/morgan": "1.9.9",
+    "@types/node": "22.15.29",
+    "@types/react": "19.1.6",
+    "@types/react-dom": "19.1.5",
+    "tailwindcss": "4.1.8",
+    "typescript": "5.8.3",
+    "vite": "6.3.5",
+    "vite-tsconfig-paths": "5.1.4"
   },
   "engines": {
     "node": ">=18"
@@ -48,7 +53,7 @@
   "keywords": [
     "mcp",
     "journal",
-    "claude-code",
+    "claude",
     "markdown"
   ],
   "license": "MIT"
