@@ -8,6 +8,7 @@ import { parseArgs } from 'node:util';
 async function main() {
   const { values: args } = parseArgs({
     options: {
+      mcp: { type: 'boolean', default: false },
       setup: { type: 'boolean', default: false },
       port: { type: 'string', default: '3000' },
       'config-path': { type: 'string' },
@@ -28,6 +29,7 @@ Usage:
   journal-mcp [options]
 
 Options:
+  --mcp                Start in MCP server mode
   --setup              Set up Claude Desktop configuration
   --port <port>        Web server port (default: 3000)
   --config-path <path> Claude Desktop config file path
@@ -36,7 +38,8 @@ Options:
   --help               Show this help message
 
 Examples:
-  journal-mcp                    # Start MCP server + web viewer
+  journal-mcp                    # Start web viewer (default)
+  journal-mcp --mcp              # Start MCP server mode
   journal-mcp --setup           # Configure Claude Desktop
   journal-mcp --setup --port 3001  # Setup with custom port
   journal-mcp --verify-setup    # Check configuration
@@ -63,29 +66,31 @@ Examples:
   // Get port from environment or argument
   const port = parseInt(process.env.JOURNAL_PORT || args.port || '3000');
 
-  console.error('🚀 Starting Journal MCP Server...');
+  if (args.mcp) {
+    // MCP server mode
+    console.error('🚀 Starting Journal MCP Server...');
+    const mcpServer = new JournalMCPServer();
+    await mcpServer.start();
+  } else {
+    // Default: Web viewer mode
+    console.error('🌐 Starting Journal Web Viewer...');
+    const webServer = await startWebServer(port);
 
-  // Start web server
-  const webServer = await startWebServer(port);
+    // Handle graceful shutdown
+    process.on('SIGINT', () => {
+      console.log('\n🛑 Shutting down gracefully...');
+      webServer.close();
+      process.exit(0);
+    });
 
-  // Start MCP server
-  const mcpServer = new JournalMCPServer();
+    process.on('SIGTERM', () => {
+      console.log('\n🛑 Shutting down gracefully...');
+      webServer.close();
+      process.exit(0);
+    });
 
-  // Handle graceful shutdown
-  process.on('SIGINT', () => {
-    console.log('\n🛑 Shutting down gracefully...');
-    webServer.close();
-    process.exit(0);
-  });
-
-  process.on('SIGTERM', () => {
-    console.log('\n🛑 Shutting down gracefully...');
-    webServer.close();
-    process.exit(0);
-  });
-
-  // Start MCP server (this will block)
-  await mcpServer.start();
+    console.error(`📖 Journal viewer running at http://localhost:${port}`);
+  }
 }
 
 main().catch((error) => {
