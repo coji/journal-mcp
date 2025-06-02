@@ -1,8 +1,17 @@
 {
   "name": "@coji/journal-mcp",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "MCP server for journal entries with web viewer",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coji/journal-mcp.git"
+  },
+  "homepage": "https://github.com/coji/journal-mcp#readme",
+  "bugs": {
+    "url": "https://github.com/coji/journal-mcp/issues"
+  },
+  "author": "coji",
   "bin": {
     "journal-mcp": "./dist/index.js"
   },
