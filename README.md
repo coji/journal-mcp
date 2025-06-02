@@ -20,13 +20,13 @@ Run directly without installation:
 
 ```bash
 # Start web viewer
-npx journal-mcp --viewer
+npx @coji/journal-mcp --viewer
 
 # Setup Claude Desktop integration
-npx journal-mcp --setup
+npx @coji/journal-mcp --setup
 
 # Start MCP server for Claude Desktop
-npx journal-mcp
+npx @coji/journal-mcp
 ```
 
 ### Local Development
@@ -61,23 +61,23 @@ pnpm build
 
 ```bash
 # Show help
-npx journal-mcp --help
+npx @coji/journal-mcp --help
 
 # Setup Claude Desktop integration
-npx journal-mcp --setup
+npx @coji/journal-mcp --setup
 
 # Verify Claude Desktop setup
-npx journal-mcp --verify-setup
+npx @coji/journal-mcp --verify-setup
 
 # Start MCP server for Claude Desktop
-npx journal-mcp
+npx @coji/journal-mcp
 
 # Start web viewer
-npx journal-mcp --viewer
+npx @coji/journal-mcp --viewer
 
 # Custom port examples
-npx journal-mcp --setup --port 3001
-npx journal-mcp --viewer --port 3001
+npx @coji/journal-mcp --setup --port 3001
+npx @coji/journal-mcp --viewer --port 3001
 ```
 
 ### Local Development Commands
@@ -131,7 +131,7 @@ docker run -p 3000:3000 journal-mcp
 
 Deploy the output of `pnpm build`:
 
-```
+```text
 ├── package.json
 ├── pnpm-lock.yaml
 ├── build/
