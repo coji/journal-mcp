@@ -1,6 +1,6 @@
 import type { Route } from './+types/route';
 import { EntryCard } from '~/routes/_app+/entries.$date/components/entry-card';
-import { JournalAPI } from '~/lib/journal-api';
+import { getRecentEntries, getStats } from '~/lib/journal-api.server';
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -10,8 +10,8 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export async function loader() {
-  const recentEntries = await JournalAPI.getRecentEntries(10);
-  const stats = await JournalAPI.getStats();
+  const recentEntries = await getRecentEntries(10);
+  const stats = await getStats();
 
   return { recentEntries, stats };
 }

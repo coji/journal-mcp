@@ -1,6 +1,6 @@
 import type { Route } from './+types/route';
 import { TagList } from '~/routes/_app+/tags/components/tag-list';
-import { JournalAPI } from '~/lib/journal-api';
+import { listTags } from '~/lib/journal-api.server';
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -10,7 +10,7 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export async function loader() {
-  const tags = await JournalAPI.listTags();
+  const tags = await listTags();
 
   return { tags };
 }

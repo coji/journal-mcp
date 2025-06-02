@@ -1,5 +1,5 @@
 import { Link } from 'react-router';
-import type { JournalFile, JournalEntry } from '~/lib/journal-api';
+import type { JournalFile, JournalEntry } from '~/lib/journal-api.server';
 
 interface EntryCardProps {
   file: JournalFile;

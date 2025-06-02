@@ -1,7 +1,7 @@
 import type { Route } from './+types/route';
 import { SearchForm } from '~/routes/_app+/search/components/search-form';
 import { EntryCard } from '~/routes/_app+/entries.$date/components/entry-card';
-import { JournalAPI } from '~/lib/journal-api';
+import { searchEntries } from '~/lib/journal-api.server';
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -35,7 +35,7 @@ export async function loader({ request }: Route.LoaderArgs) {
     return { results: null, searchParams: {} };
   }
 
-  const results = await JournalAPI.searchEntries(searchParams);
+  const results = await searchEntries(searchParams);
 
   return { results, searchParams };
 }

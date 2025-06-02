@@ -1,6 +1,6 @@
-import type { Route } from './+types/entries.$date';
+import type { Route } from './+types/route';
 import { EntryCard } from '~/routes/_app+/entries.$date/components/entry-card';
-import { JournalAPI } from '~/lib/journal-api';
+import { getEntryByDate } from '~/lib/journal-api.server';
 import { Link } from 'react-router';
 
 export function meta({ params }: Route.MetaArgs) {
@@ -11,7 +11,7 @@ export function meta({ params }: Route.MetaArgs) {
 }
 
 export async function loader({ params }: Route.LoaderArgs) {
-  const entry = await JournalAPI.getEntryByDate(params.date);
+  const entry = await getEntryByDate(params.date);
 
   if (!entry) {
     throw new Response('Journal entry not found', { status: 404 });
