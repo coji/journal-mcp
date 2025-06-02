@@ -1,5 +1,5 @@
-import type { Route } from './+types/_index';
-import { EntryCard } from '~/components/EntryCard';
+import type { Route } from './+types/route';
+import { EntryCard } from '~/routes/_app+/entries.$date/components/entry-card';
 import { JournalAPI } from '~/lib/journal-api';
 
 export function meta({}: Route.MetaArgs) {

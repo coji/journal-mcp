@@ -1,6 +1,6 @@
-import type { Route } from './+types/search';
-import { SearchForm } from '~/components/SearchForm';
-import { EntryCard } from '~/components/EntryCard';
+import type { Route } from './+types/route';
+import { SearchForm } from '~/routes/_app+/search/components/search-form';
+import { EntryCard } from '~/routes/_app+/entries.$date/components/entry-card';
 import { JournalAPI } from '~/lib/journal-api';
 
 export function meta({}: Route.MetaArgs) {

@@ -1,8 +1,8 @@
 import { Form, useSearchParams } from 'react-router';
 import { useState } from 'react';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import { Button } from './ui/button';
+import { Input } from '~/components/ui/input';
+import { Label } from '~/components/ui/label';
+import { Button } from '~/components/ui/button';
 
 export function SearchForm() {
   const [searchParams] = useSearchParams();

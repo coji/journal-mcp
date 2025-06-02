@@ -1,5 +1,5 @@
-import type { Route } from './+types/tags';
-import { TagList } from '~/components/TagList';
+import type { Route } from './+types/route';
+import { TagList } from '~/routes/_app+/tags/components/tag-list';
 import { JournalAPI } from '~/lib/journal-api';
 
 export function meta({}: Route.MetaArgs) {

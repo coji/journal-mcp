@@ -1,5 +1,5 @@
 import type { Route } from './+types/entries.$date';
-import { EntryCard } from '~/components/EntryCard';
+import { EntryCard } from '~/routes/_app+/entries.$date/components/entry-card';
 import { JournalAPI } from '~/lib/journal-api';
 import { Link } from 'react-router';
 
