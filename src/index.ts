@@ -4,13 +4,28 @@ import { JournalMCPServer } from './mcp-server.js';
 import { startWebServer } from './web-server.js';
 import { setupClaudeDesktop, verifySetup } from './setup.js';
 import { parseArgs } from 'node:util';
+import { exec } from 'node:child_process';
+
+function openBrowser(url: string) {
+  const command = process.platform === 'darwin' 
+    ? `open "${url}"` 
+    : process.platform === 'win32' 
+    ? `start "${url}"` 
+    : `xdg-open "${url}"`;
+  
+  exec(command, (error) => {
+    if (error) {
+      console.error('Could not open browser automatically');
+    }
+  });
+}
 
 async function main() {
   const { values: args } = parseArgs({
     options: {
       viewer: { type: 'boolean', default: false },
       setup: { type: 'boolean', default: false },
-      port: { type: 'string', default: '3000' },
+      port: { type: 'string', default: '8765' },
       'config-path': { type: 'string' },
       force: { type: 'boolean', default: false },
       'verify-setup': { type: 'boolean', default: false },
@@ -31,18 +46,18 @@ Usage:
 Options:
   --viewer             Start in web viewer mode
   --setup              Set up Claude Desktop configuration
-  --port <port>        Web server port (default: 3000)
+  --port <port>        Port for web viewer (default: 8765)
   --config-path <path> Claude Desktop config file path
   --force              Force overwrite existing configuration
   --verify-setup       Check if setup is correct
   --help               Show this help message
 
 Examples:
-  journal-mcp                    # Start MCP server (default)
-  journal-mcp --viewer           # Start web viewer mode
-  journal-mcp --setup           # Configure Claude Desktop
-  journal-mcp --setup --port 3001  # Setup with custom port
-  journal-mcp --verify-setup    # Check configuration
+  journal-mcp                       # Start MCP server (default)
+  journal-mcp --viewer              # Start web viewer mode
+  journal-mcp --viewer --port 8080  # Start viewer on custom port
+  journal-mcp --setup               # Configure Claude Desktop
+  journal-mcp --verify-setup        # Check configuration
 
 📚 Documentation: https://github.com/coji/journal-mcp
     `);
@@ -56,7 +71,6 @@ Examples:
 
   if (args.setup) {
     await setupClaudeDesktop({
-      port: parseInt(args.port || '3000'),
       configPath: args['config-path'],
       force: args.force,
     });
@@ -64,7 +78,7 @@ Examples:
   }
 
   // Get port from environment or argument
-  const port = parseInt(process.env.JOURNAL_PORT || args.port || '3000');
+  const port = parseInt(process.env.JOURNAL_PORT || args.port || '8765');
 
   if (args.viewer) {
     // Web viewer mode
@@ -84,7 +98,13 @@ Examples:
       process.exit(0);
     });
 
-    console.error(`📖 Journal viewer running at http://localhost:${port}`);
+    const url = `http://localhost:${port}`;
+    console.error(`📖 Journal viewer running at ${url}`);
+    
+    // Open browser automatically
+    setTimeout(() => {
+      openBrowser(url);
+    }, 1000);
   } else {
     // Default: MCP server mode
     console.error('🚀 Starting Journal MCP Server...');

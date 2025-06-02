@@ -4,7 +4,6 @@ import { fileExists, ensureDir } from './utils/files.js';
 import { detectNpxPath, getClaudeConfigPath } from './utils/system.js';
 
 export interface SetupOptions {
-  port?: number;
   configPath?: string;
   force?: boolean;
 }
@@ -13,7 +12,6 @@ export async function setupClaudeDesktop(
   options: SetupOptions = {}
 ): Promise<void> {
   const configPath = options.configPath || getClaudeConfigPath();
-  const port = options.port || 3000;
 
   console.log('🔧 Setting up Claude Desktop configuration...');
   console.log(`📍 Config path: ${configPath}`);
@@ -61,9 +59,6 @@ export async function setupClaudeDesktop(
   config.mcpServers.journal = {
     command: npxPath,
     args: ['@coji/journal-mcp'],
-    env: {
-      JOURNAL_PORT: port.toString(),
-    },
   };
 
   // Write updated config
@@ -77,7 +72,9 @@ export async function setupClaudeDesktop(
   console.log('\n🚀 Next steps:');
   console.log('1. Restart Claude Desktop');
   console.log('2. The journal MCP server will be available in Claude Desktop');
-  console.log(`3. Web viewer will be available at http://localhost:${port}`);
+  console.log(
+    '3. To start web viewer separately, run: npx @coji/journal-mcp --viewer'
+  );
   console.log(
     '\n💡 Try asking Claude: "Add a journal entry about today\'s work"'
   );

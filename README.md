@@ -76,8 +76,7 @@ npx @coji/journal-mcp
 npx @coji/journal-mcp --viewer
 
 # Custom port examples
-npx @coji/journal-mcp --setup --port 3001
-npx @coji/journal-mcp --viewer --port 3001
+npx @coji/journal-mcp --viewer --port 8080
 ```
 
 ### Local Development Commands
@@ -98,7 +97,7 @@ node dist/index.js
 node dist/index.js --viewer
 ```
 
-The web viewer will be available at `http://localhost:3000` (or your specified port).
+The web viewer will be available at `http://localhost:8765` (or your specified port).
 
 ## MCP Tools
 
@@ -124,7 +123,7 @@ Journal entries are stored in:
 
 ```bash
 docker build -t journal-mcp .
-docker run -p 3000:3000 journal-mcp
+docker run -p 8765:8765 journal-mcp
 ```
 
 ### Manual Deployment
