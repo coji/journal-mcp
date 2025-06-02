@@ -40,9 +40,9 @@ export async function loader({ request }: Route.LoaderArgs) {
   return { results, searchParams };
 }
 
-export default function Search({ loaderData }: Route.ComponentProps) {
-  const { results, searchParams } = loaderData;
-
+export default function Search({
+  loaderData: { results },
+}: Route.ComponentProps) {
   return (
     <div className="space-y-8">
       <div>
