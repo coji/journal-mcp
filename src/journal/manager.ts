@@ -12,16 +12,15 @@ import {
   getEntriesDir,
   getDateFilePath,
   parseDateFromPath,
-  getTodayDate,
 } from '../utils/paths.js';
 import {
   ensureDir,
-  fileExists,
   readFileIfExists,
   writeFileWithDir,
   backupFile,
   deleteFile,
 } from '../utils/files.js';
+import { now } from '../utils/dayjs.js';
 
 // Global lock map for file operations
 const lockMap = new Map<string, Promise<void>>();
@@ -160,8 +159,8 @@ async function parseJournalFile(
   return {
     title: frontmatter.title || date,
     tags: frontmatter.tags || [],
-    created: frontmatter.created || new Date().toISOString(),
-    updated: frontmatter.updated || new Date().toISOString(),
+    created: frontmatter.created || now().toISOString(),
+    updated: frontmatter.updated || now().toISOString(),
     entries_count: frontmatter.entries_count || entries.length,
     entries,
     filePath,
@@ -188,9 +187,9 @@ function formatJournalFile(file: JournalFile): string {
     content += `${entry.content}\n\n`;
   }
 
-  content += `---\n*最終更新: ${new Date(file.updated).toLocaleString(
-    'ja-JP'
-  )} | エントリ数: ${file.entries_count}*\n`;
+  content += `---\n*最終更新: ${now().format('YYYY-MM-DD')} | エントリ数: ${
+    file.entries_count
+  }*\n`;
 
   return matter.stringify(content, frontmatter);
 }
@@ -231,11 +230,12 @@ function filterJournalFiles(
 /**
  * Add a new journal entry
  */
-export async function addEntry(options: AddEntryOptions): Promise<JournalEntry> {
-  const date = options.timestamp
-    ? options.timestamp.split('T')[0]
-    : getTodayDate();
-  const timestamp = options.timestamp || new Date().toISOString();
+export async function addEntry(
+  options: AddEntryOptions
+): Promise<JournalEntry> {
+  const t = now();
+  const date = t.format('YYYY-MM-DD');
+  const timestamp = t.format();
   const filePath = getDateFilePath(date);
 
   // Acquire file lock
@@ -246,13 +246,13 @@ export async function addEntry(options: AddEntryOptions): Promise<JournalEntry> 
   try {
     // Create entry
     const entry: JournalEntry = {
-      id: `${date}-${Date.now()}`,
+      id: `${date}-${timestamp}`,
       title: extractTitle(options.content),
       content: options.content,
       tags: options.tags || extractTags(options.content),
       created: timestamp,
       updated: timestamp,
-      timestamp: timestamp.split('T')[1].slice(0, 5), // HH:MM format
+      timestamp: t.format('HH:mm'), // HH:MM format
     };
 
     // Read existing file or create new one
@@ -370,7 +370,9 @@ export async function getRecentEntries(limit = 10): Promise<JournalFile[]> {
 /**
  * Get entry by date
  */
-export async function getEntryByDate(date: string): Promise<JournalFile | null> {
+export async function getEntryByDate(
+  date: string
+): Promise<JournalFile | null> {
   const filePath = getDateFilePath(date);
   const content = await readFileIfExists(filePath);
 
@@ -386,7 +388,9 @@ export async function getEntryByDate(date: string): Promise<JournalFile | null> 
 /**
  * List all tags
  */
-export async function listTags(): Promise<Array<{ tag: string; count: number }>> {
+export async function listTags(): Promise<
+  Array<{ tag: string; count: number }>
+> {
   const result = await searchEntries();
   const tagCounts = new Map<string, number>();
 
@@ -417,10 +421,7 @@ export async function getStats(): Promise<JournalStats> {
     };
   }
 
-  const totalEntries = files.reduce(
-    (sum, file) => sum + file.entries_count,
-    0
-  );
+  const totalEntries = files.reduce((sum, file) => sum + file.entries_count, 0);
   const dates = files.map((f) => f.date).sort();
   const topTags = await listTags();
 

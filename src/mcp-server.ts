@@ -164,7 +164,6 @@ export class JournalMCPServer {
             const options: AddEntryOptions = {
               content: args?.content as string,
               tags: args?.tags as string[] | undefined,
-              timestamp: args?.timestamp as string | undefined,
             };
 
             const entry = await addEntry(options);

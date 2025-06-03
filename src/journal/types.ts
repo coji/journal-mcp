@@ -50,7 +50,6 @@ export interface JournalStats {
 export interface AddEntryOptions {
   content: string;
   tags?: string[];
-  timestamp?: string;
 }
 
 export interface JournalConfig {

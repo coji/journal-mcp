@@ -7,12 +7,13 @@ import { parseArgs } from 'node:util';
 import { exec } from 'node:child_process';
 
 function openBrowser(url: string) {
-  const command = process.platform === 'darwin' 
-    ? `open "${url}"` 
-    : process.platform === 'win32' 
-    ? `start "${url}"` 
-    : `xdg-open "${url}"`;
-  
+  const command =
+    process.platform === 'darwin'
+      ? `open "${url}"`
+      : process.platform === 'win32'
+      ? `start "${url}"`
+      : `xdg-open "${url}"`;
+
   exec(command, (error) => {
     if (error) {
       console.error('Could not open browser automatically');
@@ -100,7 +101,7 @@ Examples:
 
     const url = `http://localhost:${port}`;
     console.error(`📖 Journal viewer running at ${url}`);
-    
+
     // Open browser automatically
     setTimeout(() => {
       openBrowser(url);
