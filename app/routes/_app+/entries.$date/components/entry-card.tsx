@@ -36,12 +36,19 @@ export function EntryCard({ file }: EntryCardProps) {
       )}
 
       <div className="space-y-4">
-        {file.entries.map((entry) => (
-          <SingleEntry key={entry.id} entry={entry} date={file.date} />
+        {file.entries.map((entry, idx) => (
+          <SingleEntry
+            key={`${entry.id}_${idx}`}
+            entry={entry}
+            date={file.date}
+          />
         ))}
       </div>
 
-      <div className="mt-4 pt-4 border-t border-gray-100 text-xs text-gray-500">
+      <div
+        className="mt-4 pt-4 border-t border-gray-100 text-xs text-gray-500"
+        suppressHydrationWarning
+      >
         Last updated: {new Date(file.updated).toLocaleDateString()}
       </div>
     </div>
