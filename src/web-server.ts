@@ -1,16 +1,17 @@
 import compression from 'compression';
 import express from 'express';
 import { createRequestHandler } from '@react-router/express';
+import path from 'node:path';
 
 const BUILD_PATH = '../build/server/index.js';
+const CLIENT_PATH = './build/client';
+const CLIENT_ASSET_PATH = path.join(CLIENT_PATH, 'assets');
 
 const requestHandler = createRequestHandler({
   build: await import(BUILD_PATH),
 });
 
 export const startWebServer = async (port?: Number) => {
-  // Short-circuit the type-checking of the built output.
-  const BUILD_PATH = '../build/server/index.js';
   const PORT = port || 3000;
 
   const app = express();
@@ -19,9 +20,9 @@ export const startWebServer = async (port?: Number) => {
   app.disable('x-powered-by');
   app.use(
     '/assets',
-    express.static('../build/client/assets', { immutable: true, maxAge: '1y' })
+    express.static(CLIENT_ASSET_PATH, { immutable: true, maxAge: '1y' })
   );
-  app.use(express.static('build/client', { maxAge: '1h' }));
+  app.use(express.static(CLIENT_PATH, { maxAge: '1h' }));
   app.use(requestHandler);
 
   const server = app.listen(PORT, () => {
